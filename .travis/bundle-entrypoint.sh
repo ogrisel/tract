@@ -64,6 +64,14 @@ hey_snips_v4_model17_pulse8=`$TRACT --machine-friendly $CACHEDIR/hey_snips_v4_mo
     -O -i Sx20xf32 --pulse 8 profile --bench \
     | grep real | cut -f 2 -d ' '`
 
+untrained_wavenent_binary_add_2sec=`$TRACT --machine-friendly $CACHEDIR/untrained_wavenent_binary_add.pb \
+    -O -i 200x20xf32 profile --bench \
+    | grep real | cut -f 2 -d ' '`
+
+untrained_wavenent_binary_add_pulse8=`$TRACT --machine-friendly $CACHEDIR/untrained_wavenent_binary_add.pb \
+    -O -i Sx20xf32 --pulse 8 profile --bench \
+    | grep real | cut -f 2 -d ' '`
+
 echo net.inceptionv3.evaltime.pass $inceptionv3 >> metrics
 echo net.arm_ml_kws_cnn_m.evaltime.pass $arm_ml_kws_cnn_m >> metrics
 echo net.voicecom_float.evaltime.2sec $voicecom_float >> metrics
@@ -71,6 +79,8 @@ echo net.voicecom_fake_quant.evaltime.2sec $voicecom_fake_quant >> metrics
 echo net.hey_snips_v31.evaltime.400ms $hey_snips_v31_400ms >> metrics
 echo net.hey_snips_v4_model17.evaltime.2sec $hey_snips_v4_model17_2sec >> metrics
 echo net.hey_snips_v4_model17.evaltime.pulse8 $hey_snips_v4_model17_pulse8 >> metrics
+echo net.untrained_wavenent_binary_add.evaltime.2sec $untrained_wavenent_binary_add_2sec >> metrics
+echo net.untrained_wavenent_binary_add.evaltime.pulse8 $untrained_wavenent_binary_add_pulse8 >> metrics
 
 if [ -e /etc/issue ] && ( cat /etc/issue | grep Raspbian )
 then
@@ -106,5 +116,12 @@ do
     usec=`cat bench | tail -1 | sed "s/.* //"`
     sec=`python -c "print(float($usec) / 1000000)"`
     echo net.hey_snips_v31.tflite_$tflite.400ms $sec >> metrics
+
+    $CACHEDIR/tflite_benchmark_model_$tflite \
+        --graph=$CACHEDIR/untrained_wavenent_binary_add.tflite \
+    2> bench
+    usec=`cat bench | tail -1 | sed "s/.* //"`
+    sec=`python -c "print(float($usec) / 1000000)"`
+    echo net.untrained_wavenent_binary_add.tflite_$tflite.400ms $sec >> metrics
 done
 

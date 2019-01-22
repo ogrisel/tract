@@ -39,3 +39,12 @@ run_in_tf_docker "cd /models ; tflite_convert \
 #     --output_arrays output_node \
 #     --output_format tflite \
 #     --output_file hey_snips_v4_model17.tflite"
+
+# untrained wavenet with binary add
+run_in_tf_docker "cd /models ; tflite_convert \
+    --graph_def_file untrained_wavenent_binary_add.pb \
+    --input_arrays input_node \
+    --input_shapes 200,20 \
+    --output_arrays output_node \
+    --output_format tflite \
+    --output_file untrained_wavenent_binary_add.tflite"
