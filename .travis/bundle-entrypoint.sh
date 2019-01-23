@@ -122,6 +122,6 @@ do
     2> bench
     usec=`cat bench | tail -1 | sed "s/.* //"`
     sec=`python -c "print(float($usec) / 1000000)"`
-    echo net.untrained_wavenent_binary_add.tflite_$tflite.400ms $sec >> metrics
+    echo net.untrained_wavenent_binary_add.tflite_$tflite.2sec $sec >> metrics
 done
 
